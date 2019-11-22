@@ -1,0 +1,1 @@
+# proto-schema-registry
