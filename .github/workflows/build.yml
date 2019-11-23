@@ -7,4 +7,6 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Build the Docker image
-      run: make build
+      run: make test
+      env: # Set the secret as an input
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
