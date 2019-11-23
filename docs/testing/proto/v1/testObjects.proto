@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package v1;
+
+import "v1/testObject.proto";
+import "v1/testObject2.proto";
+import "v1/testObject3.proto";
+import "v1/enums.proto";
+
+option go_package = "v1";
+
+message TestObjects {
+    TestObject object = 1;
+    TestObject2 object_2 = 2;
+    TestObject3 object_3 = 3;
+    EnumMessage enum_message = 4;
+    EnumMessage.Enum2 enum_inside_message = 5;
+}
