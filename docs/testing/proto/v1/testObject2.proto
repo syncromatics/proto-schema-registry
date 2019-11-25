@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package v1;
+
+import "google/protobuf/wrappers.proto";
+import "v1/testObject.proto";
+
+message TestObject2 {
+    repeated google.protobuf.StringValue strings = 1;
+    map<string, TestObject> map_objects = 2;
+    map<int32, string> string_maps = 3;
+}

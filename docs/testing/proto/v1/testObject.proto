@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package v1;
+
+import "google/protobuf/wrappers.proto";
+
+message TestObject {
+    int64 id = 1;
+    google.protobuf.StringValue stuff = 2;
+    bool bool_message = 3;
+    bytes bytes_message = 4;
+    double double_message = 5;
+    fixed32 fixed32_message = 6;
+    fixed64 fixed64_message = 7;
+    float float_message = 8;
+    sfixed32 sfixed32_message = 9;
+    sfixed64 sfixed64_message = 10;
+    sint32 sint32_message = 11;
+    sint64 sint64_message = 12;
+    uint32 uint32_message = 13;
+    uint64 uint64_message = 14;
+}

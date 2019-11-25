@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package v1;
+
+import "v1/testObject.proto";
+import "v1/testObject2.proto";
+
+message TestObject3 {
+    oneof request {
+        TestObject request_test_object = 1;
+        TestObject2 request_test_object_2 = 2;
+        string request_string = 4;
+    }
+
+    string bla = 3;
+
+    oneof request2 {
+        string request2_string = 5;
+        int32 request2_int32 = 6;
+    }
+}
