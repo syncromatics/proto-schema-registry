@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package proto.schema.registry.v1;
+
+option csharp_namespace = "Proto.Schema.Registry.V1";
+option go_package = "registryv1";
+option java_multiple_files = true;
+option java_outer_classname = "RegistryApiProto";
+option java_package = "com.proto.schema.registry.v1";
+
+import "proto/schema/registry/v1/register_schema_error.proto";
+import "proto/schema/registry/v1/register_schema_success.proto";
+
+// RegistryAPI allows storage and breaking change detection of proto definitions for kafka.
+service RegistryAPI {
+    // GetSchema will return the schema at the specific version.
+    rpc GetSchema(GetSchemaRequest) returns (GetSchemaResponse);
+
+    // RegisterSchema will create a new version or return the version of the schema that matches the request.
+    rpc RegisterSchema(RegisterSchemaRequest) returns (RegisterSchemaResponse);
+}
+
+message GetSchemaRequest {
+    int64 id = 1;
+}
+
+message GetSchemaResponse {
+    bool exists = 1;
+    bytes schema = 2;
+}
+
+message RegisterSchemaRequest {
+    string topic = 1;
+    bytes schema = 2;
+}
+
+message RegisterSchemaResponse {
+    oneof response {
+        RegisterSchemaSuccess response_success = 1;
+        RegisterSchemaError response_error = 2;
+    }
+}

@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package proto.schema.registry.v1;
+
+option csharp_namespace = "Proto.Schema.Registry.V1";
+option go_package = "registryv1";
+option java_multiple_files = true;
+option java_outer_classname = "RegisterSchemaSuccessProto";
+option java_package = "com.proto.schema.registry.v1";
+
+// RegisterSchemaSuccess is the success message if a register schema is successful or the schema already exists.
+message RegisterSchemaSuccess {
+    int64 id = 1;
+}
