@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package proto.schema.registry.v1;
+
+option csharp_namespace = "Proto.Schema.Registry.V1";
+option go_package = "registryv1";
+option java_multiple_files = true;
+option java_outer_classname = "RegisterSchemaErrorProto";
+option java_package = "com.proto.schema.registry.v1";
+
+// RegisterSchemaError are the errors returned if a register schema fails.
+message RegisterSchemaError {
+    repeated string errors = 1;
+}
