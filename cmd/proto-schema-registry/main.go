@@ -9,7 +9,9 @@ import (
 	"syscall"
 
 	"github.com/syncromatics/proto-schema-registry/internal/log"
+	v1 "github.com/syncromatics/proto-schema-registry/internal/protos/proto/schema/registry/v1"
 	"github.com/syncromatics/proto-schema-registry/internal/service"
+	"github.com/syncromatics/proto-schema-registry/internal/storage"
 
 	"github.com/pkg/errors"
 	"golang.org/x/sync/errgroup"
@@ -25,12 +27,19 @@ func main() {
 
 	log.Info(settings.String())
 
-	server := grpc.NewServer()
-	service.RegisterService(server)
-
 	ctx, cancel := context.WithCancel(context.Background())
 	grp, ctx := errgroup.WithContext(ctx)
 
+	storage, err := storage.NewFileStorage(settings.KafkaBroker, 3, "/tmp/schema-registry", "__proto_schemas")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	server := grpc.NewServer()
+	service := service.NewService(storage)
+	v1.RegisterRegistryAPIServer(server, service)
+
+	grp.Go(storage.Run(ctx))
 	grp.Go(hostServer(ctx, server, settings.Port))
 
 	eventChan := make(chan os.Signal)
@@ -44,7 +53,7 @@ func main() {
 	cancel()
 
 	if err := grp.Wait(); err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 }
 

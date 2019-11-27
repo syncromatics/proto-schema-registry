@@ -8,16 +8,16 @@ import (
 )
 
 type settings struct {
-	ZookeeperHost string
-	Port          int
+	KafkaBroker string
+	Port        int
 }
 
 func getSettingsFromEnv() (*settings, error) {
 	allErrors := []string{}
 
-	zookeeperHost, ok := os.LookupEnv("ZOOKEEPER_HOST")
+	broker, ok := os.LookupEnv("KAFKA_BROKER")
 	if !ok {
-		allErrors = append(allErrors, "ZOOKEEPER_HOST")
+		allErrors = append(allErrors, "KAFKA_BROKER")
 	}
 
 	port, ok := os.LookupEnv("PORT")
@@ -35,11 +35,11 @@ func getSettingsFromEnv() (*settings, error) {
 	}
 
 	return &settings{
-		ZookeeperHost: zookeeperHost,
-		Port:          portInt,
+		KafkaBroker: broker,
+		Port:        portInt,
 	}, nil
 }
 
 func (s *settings) String() string {
-	return fmt.Sprintf("ZOOKEEPER_HOST: '%s'\nPORT: %d\n", s.ZookeeperHost, s.Port)
+	return fmt.Sprintf("KAFKA_BROKER: '%s'\nPORT: %d\n", s.KafkaBroker, s.Port)
 }
