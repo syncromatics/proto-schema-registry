@@ -17,3 +17,8 @@ test-proto-generate:
 
 	protoc -I docs/testing/proto/ --go_out=.:internal/testing/testProto/ docs/testing/proto/v1/*.proto
 	protoc -I docs/testing/proto/ --go_out=.:internal/testing/testProto/ docs/testing/proto/gen/*.proto
+
+ship:
+	docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}
+	docker build -t syncromatics/proto-schema-registry:${VERSION} --target final .
+	docker push syncromatics/proto-schema-registry:${VERSION}
