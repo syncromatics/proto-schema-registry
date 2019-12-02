@@ -29,9 +29,17 @@ jobs:
       - name: Prepare repository
         run: git checkout "${GITHUB_REF:11}"
 
-      - name: Gogitver Github Release
+      - name: Gogitver release
+        id: gogitver_release
         uses: syncromatics/gogitver-release@0.0.9
         with:
           gogitver-version: "0.8.1"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Ship the Docker image
+        run: make ship
+        env:
+          VERSION: ${{ steps.gogitver_release.outputs.release_tag }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
