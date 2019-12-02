@@ -30,7 +30,7 @@ jobs:
         run: git checkout "${GITHUB_REF:11}"
 
       - name: Gogitver Github Release
-        uses: syncromatics/gogitver-release@0.0.4
+        uses: syncromatics/gogitver-release@0.0.9
         with:
           gogitver-version: "0.8.1"
         env:
