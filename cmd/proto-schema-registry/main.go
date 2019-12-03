@@ -9,9 +9,9 @@ import (
 	"syscall"
 
 	"github.com/syncromatics/proto-schema-registry/internal/log"
-	v1 "github.com/syncromatics/proto-schema-registry/internal/protos/proto/schema/registry/v1"
 	"github.com/syncromatics/proto-schema-registry/internal/service"
 	"github.com/syncromatics/proto-schema-registry/internal/storage"
+	v1 "github.com/syncromatics/proto-schema-registry/pkg/proto/schema/registry/v1"
 
 	"github.com/pkg/errors"
 	"golang.org/x/sync/errgroup"

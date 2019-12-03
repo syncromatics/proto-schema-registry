@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	v1 "github.com/syncromatics/proto-schema-registry/internal/protos/proto/schema/registry/v1"
+	v1 "github.com/syncromatics/proto-schema-registry/pkg/proto/schema/registry/v1"
 )
 
 // Storage is the storage interface for schema storage
