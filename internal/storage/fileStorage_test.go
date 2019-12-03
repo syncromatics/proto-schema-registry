@@ -148,7 +148,7 @@ func Test_FileStorage_AddSchema(t *testing.T) {
 	}
 
 	assert.Equal(t, true, ok)
-	assert.Equal(t, int64(1), id)
+	assert.Equal(t, uint32(1), id)
 
 	gSchema, ok, err := file.GetSchema(context.Background(), id)
 	if err != nil {
@@ -164,7 +164,7 @@ func Test_FileStorage_AddSchema(t *testing.T) {
 	}
 
 	assert.Equal(t, true, ok)
-	assert.Equal(t, int64(2), id)
+	assert.Equal(t, uint32(2), id)
 
 	gSchema, ok, err = file.GetSchema(context.Background(), id)
 	if err != nil {
@@ -250,7 +250,7 @@ func Test_FileStorage_AddSchemaShouldCheckForBreakingChanges(t *testing.T) {
 	}
 
 	assert.Equal(t, true, ok)
-	assert.Equal(t, int64(1), id)
+	assert.Equal(t, uint32(1), id)
 
 	var b2 bytes.Buffer
 	err = gzipWrite(&b2, []byte(breakingSchema1))
@@ -308,7 +308,7 @@ func Test_FileStorage_AddSchemaShouldAllowGoodChanges(t *testing.T) {
 	}
 
 	assert.Equal(t, true, ok)
-	assert.Equal(t, int64(2), id)
+	assert.Equal(t, uint32(2), id)
 }
 
 func gzipWrite(w io.Writer, data []byte) error {
