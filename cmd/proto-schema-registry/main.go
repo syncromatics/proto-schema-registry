@@ -30,7 +30,7 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	grp, ctx := errgroup.WithContext(ctx)
 
-	storage, err := storage.NewFileStorage(settings.KafkaBroker, 3, "/tmp/schema-registry", "__proto_schemas")
+	storage, err := storage.NewFileStorage(settings.KafkaBroker, settings.ReplicationFactor, "/tmp/schema-registry", "__proto_schemas")
 	if err != nil {
 		log.Fatal(err)
 	}

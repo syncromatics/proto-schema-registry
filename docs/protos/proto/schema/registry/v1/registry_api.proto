@@ -18,6 +18,9 @@ service RegistryAPI {
 
     // RegisterSchema will create a new version or return the version of the schema that matches the request.
     rpc RegisterSchema(RegisterSchemaRequest) returns (RegisterSchemaResponse);
+
+    // Ping will return a response.
+    rpc Ping(PingRequest) returns (PingResponse);
 }
 
 message GetSchemaRequest {
@@ -40,3 +43,7 @@ message RegisterSchemaResponse {
         RegisterSchemaError response_error = 2;
     }
 }
+
+message PingRequest {}
+
+message PingResponse {}
