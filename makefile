@@ -10,7 +10,7 @@ proto-lint:
 
 proto-generate: proto-lint
 	mkdir -p internal/protos
-	docker run -v "$(PWD)/docs/protos:/work" -v $(PWD)/internal/protos:/output -u `id -u $(USER)`:`id -g $(USER)` uber/prototool:latest prototool generate
+	docker run -v "$(PWD)/docs/protos:/work" -v $(PWD)/pkg/:/output -u `id -u $(USER)`:`id -g $(USER)` uber/prototool:latest prototool generate
 
 test-proto-generate:
 	mkdir -p internal/testing/testProto/v1

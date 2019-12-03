@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	v1 "github.com/syncromatics/proto-schema-registry/internal/protos/proto/schema/registry/v1"
 	"github.com/syncromatics/proto-schema-registry/internal/service"
+	v1 "github.com/syncromatics/proto-schema-registry/pkg/proto/schema/registry/v1"
 
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
