@@ -8,8 +8,8 @@ import (
 
 // Storage is the storage interface for schema storage
 type Storage interface {
-	GetSchema(ctx context.Context, id int64) (schema []byte, ok bool, err error)
-	RegisterSchema(ctx context.Context, topic string, schema []byte) (id int64, errors []string, ok bool, err error)
+	GetSchema(ctx context.Context, id uint32) (schema []byte, ok bool, err error)
+	RegisterSchema(ctx context.Context, topic string, schema []byte) (id uint32, errors []string, ok bool, err error)
 }
 
 // Service is the implementation of the schema service

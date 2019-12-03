@@ -25,19 +25,19 @@ type FileStorage struct {
 	rootDirectory string
 
 	mtx               sync.Mutex
-	maxID             int64
-	idMap             map[int64]string
-	topicHash         map[string]map[string]int64
-	latestTopicSchema map[string]int64
+	maxID             uint32
+	idMap             map[uint32]string
+	topicHash         map[string]map[string]uint32
+	latestTopicSchema map[string]uint32
 }
 
 // NewFileStorage creates a new file storage driver
 func NewFileStorage(broker string, replicas int16, rootDirectory string, topic string) (*FileStorage, error) {
 	file := &FileStorage{
 		rootDirectory:     rootDirectory,
-		topicHash:         map[string]map[string]int64{},
-		idMap:             map[int64]string{},
-		latestTopicSchema: map[string]int64{},
+		topicHash:         map[string]map[string]uint32{},
+		idMap:             map[uint32]string{},
+		latestTopicSchema: map[string]uint32{},
 	}
 
 	consumer, err := newKafkaConsumer(broker, replicas, file, topic)
@@ -70,7 +70,7 @@ func (f *FileStorage) Run(ctx context.Context) func() error {
 }
 
 // GetSchema will attempt to get a schema by id
-func (f *FileStorage) GetSchema(ctx context.Context, id int64) ([]byte, bool, error) {
+func (f *FileStorage) GetSchema(ctx context.Context, id uint32) ([]byte, bool, error) {
 	err := f.waitForConsumerCatchup(30 * time.Second)
 	if err != nil {
 		return nil, false, err
@@ -88,7 +88,7 @@ func (f *FileStorage) GetSchema(ctx context.Context, id int64) ([]byte, bool, er
 }
 
 // RegisterSchema will register a schema or return the id if it already exists
-func (f *FileStorage) RegisterSchema(ctx context.Context, topic string, schema []byte) (int64, []string, bool, error) {
+func (f *FileStorage) RegisterSchema(ctx context.Context, topic string, schema []byte) (uint32, []string, bool, error) {
 	err := f.waitForConsumerCatchup(30 * time.Second)
 	if err != nil {
 		return 0, nil, false, err
@@ -161,7 +161,7 @@ func (f *FileStorage) store(schema *Schema) error {
 	f.maxID = schema.ID
 
 	if _, ok := f.topicHash[schema.Subject]; !ok {
-		f.topicHash[schema.Subject] = map[string]int64{}
+		f.topicHash[schema.Subject] = map[string]uint32{}
 	}
 
 	md5 := md5.Sum(schema.Schema)
@@ -172,7 +172,7 @@ func (f *FileStorage) store(schema *Schema) error {
 	return nil
 }
 
-func (f *FileStorage) getSchema(id int64) ([]byte, error) {
+func (f *FileStorage) getSchema(id uint32) ([]byte, error) {
 	s, ok := f.idMap[id]
 	if !ok {
 		return nil, errors.Errorf("failed to find schema for '%d'", id)

@@ -10,5 +10,5 @@ option java_package = "com.proto.schema.registry.v1";
 
 // RegisterSchemaSuccess is the success message if a register schema is successful or the schema already exists.
 message RegisterSchemaSuccess {
-    int64 id = 1;
+    uint32 id = 1;
 }

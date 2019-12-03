@@ -203,14 +203,14 @@ func (k *kafka) processMessage(message *sarama.ConsumerMessage) error {
 // Schema is a proto schema
 type Schema struct {
 	Subject string
-	ID      int64
+	ID      uint32
 	Schema  []byte
 	Deleted bool
 }
 
 type keySchema struct {
 	Subject string
-	ID      int64
+	ID      uint32
 	Magic   int
 	KeyType string
 }

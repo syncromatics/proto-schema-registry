@@ -12,15 +12,15 @@ import (
 )
 
 type storageMock struct {
-	get      func(context.Context, int64) ([]byte, bool, error)
-	register func(context.Context, string, []byte) (int64, []string, bool, error)
+	get      func(context.Context, uint32) ([]byte, bool, error)
+	register func(context.Context, string, []byte) (uint32, []string, bool, error)
 }
 
-func (s *storageMock) GetSchema(ctx context.Context, id int64) (schema []byte, ok bool, err error) {
+func (s *storageMock) GetSchema(ctx context.Context, id uint32) (schema []byte, ok bool, err error) {
 	return s.get(ctx, id)
 }
 
-func (s *storageMock) RegisterSchema(ctx context.Context, topic string, schema []byte) (id int64, errors []string, ok bool, err error) {
+func (s *storageMock) RegisterSchema(ctx context.Context, topic string, schema []byte) (id uint32, errors []string, ok bool, err error) {
 	return s.register(ctx, topic, schema)
 }
 
@@ -28,8 +28,8 @@ func Test_Service_GetSchemaSuccess(t *testing.T) {
 	schema := []byte{0x0, 0x1, 0x9}
 
 	storage := &storageMock{
-		get: func(context context.Context, id int64) ([]byte, bool, error) {
-			assert.Equal(t, int64(42), id)
+		get: func(context context.Context, id uint32) ([]byte, bool, error) {
+			assert.Equal(t, uint32(42), id)
 			return schema, true, nil
 		},
 	}
@@ -49,8 +49,8 @@ func Test_Service_GetSchemaSuccess(t *testing.T) {
 
 func Test_Service_GetSchemaNotFound(t *testing.T) {
 	storage := &storageMock{
-		get: func(context context.Context, id int64) ([]byte, bool, error) {
-			assert.Equal(t, int64(43), id)
+		get: func(context context.Context, id uint32) ([]byte, bool, error) {
+			assert.Equal(t, uint32(43), id)
 			return nil, false, nil
 		},
 	}
@@ -71,8 +71,8 @@ func Test_Service_GetSchemaNotFound(t *testing.T) {
 func Test_Service_GetSchemaError(t *testing.T) {
 	expectedErr := errors.Errorf("failed")
 	storage := &storageMock{
-		get: func(context context.Context, id int64) ([]byte, bool, error) {
-			assert.Equal(t, int64(44), id)
+		get: func(context context.Context, id uint32) ([]byte, bool, error) {
+			assert.Equal(t, uint32(44), id)
 			return nil, false, expectedErr
 		},
 	}
@@ -89,7 +89,7 @@ func Test_Service_GetSchemaError(t *testing.T) {
 func Test_Service_RegisterSchemaSuccess(t *testing.T) {
 	requestSchema := []byte{0x9, 0x7, 0x5}
 	storage := &storageMock{
-		register: func(ctx context.Context, topic string, schema []byte) (int64, []string, bool, error) {
+		register: func(ctx context.Context, topic string, schema []byte) (uint32, []string, bool, error) {
 			assert.Equal(t, "Test_Service_RegisterSchemaSuccess", topic)
 			assert.Equal(t, requestSchema, schema)
 			return 1, nil, true, nil
@@ -117,7 +117,7 @@ func Test_Service_RegisterSchemaWithSchemaErrors(t *testing.T) {
 	requestSchema := []byte{0x9, 0x7, 0x5}
 	schemaErrors := []string{"bad error", "even badder error"}
 	storage := &storageMock{
-		register: func(ctx context.Context, topic string, schema []byte) (int64, []string, bool, error) {
+		register: func(ctx context.Context, topic string, schema []byte) (uint32, []string, bool, error) {
 			assert.Equal(t, "Test_Service_RegisterSchemaWithSchemaErrors", topic)
 			assert.Equal(t, requestSchema, schema)
 			return 0, schemaErrors, false, nil
@@ -145,7 +145,7 @@ func Test_Service_RegisterSchemaError(t *testing.T) {
 	requestSchema := []byte{0x9, 0x7, 0x5}
 	expectedErr := errors.Errorf("failed")
 	storage := &storageMock{
-		register: func(ctx context.Context, topic string, schema []byte) (int64, []string, bool, error) {
+		register: func(ctx context.Context, topic string, schema []byte) (uint32, []string, bool, error) {
 			assert.Equal(t, "Test_Service_RegisterSchemaError", topic)
 			assert.Equal(t, requestSchema, schema)
 			return 0, nil, false, expectedErr

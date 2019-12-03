@@ -21,7 +21,7 @@ service RegistryAPI {
 }
 
 message GetSchemaRequest {
-    int64 id = 1;
+    uint32 id = 1;
 }
 
 message GetSchemaResponse {
