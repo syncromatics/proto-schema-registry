@@ -32,7 +32,7 @@ type FileStorage struct {
 }
 
 // NewFileStorage creates a new file storage driver
-func NewFileStorage(broker string, replicas int16, rootDirectory string, topic string) (*FileStorage, error) {
+func NewFileStorage(broker string, replicas int16, rootDirectory string, topic string, timeout time.Duration) (*FileStorage, error) {
 	file := &FileStorage{
 		rootDirectory:     rootDirectory,
 		topicHash:         map[string]map[string]uint32{},
@@ -40,7 +40,7 @@ func NewFileStorage(broker string, replicas int16, rootDirectory string, topic s
 		latestTopicSchema: map[string]uint32{},
 	}
 
-	consumer, err := newKafkaConsumer(broker, replicas, file, topic)
+	consumer, err := newKafkaConsumer(broker, replicas, file, topic, timeout)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to create kafka consumer")
 	}

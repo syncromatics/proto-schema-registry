@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/Shopify/sarama"
 	"github.com/pkg/errors"
@@ -29,7 +30,7 @@ type kafka struct {
 	currentOffset int64
 }
 
-func newKafkaConsumer(broker string, replicas int16, storer SchemaStorer, topic string) (*kafka, error) {
+func newKafkaConsumer(broker string, replicas int16, storer SchemaStorer, topic string, timeout time.Duration) (*kafka, error) {
 	config := sarama.NewConfig()
 	config.Producer.Retry.Max = 1
 	config.Producer.RequiredAcks = sarama.WaitForAll
@@ -37,9 +38,20 @@ func newKafkaConsumer(broker string, replicas int16, storer SchemaStorer, topic 
 	config.Producer.Return.Errors = true
 	config.Version = sarama.MaxVersion
 
-	client, err := sarama.NewClient([]string{broker}, config)
+	var client sarama.Client
+	var err error
+
+	deadline := time.Now().Add(timeout)
+	for time.Now().Before(deadline) {
+		client, err = sarama.NewClient([]string{broker}, config)
+		if err == nil {
+			break
+		}
+
+		time.Sleep(100 * time.Millisecond)
+	}
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to create kafka client")
+		return nil, errors.Wrapf(err, "timeout waiting to create kafka client")
 	}
 
 	p, err := sarama.NewSyncProducer([]string{broker}, config)

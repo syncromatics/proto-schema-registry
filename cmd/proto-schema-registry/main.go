@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/syncromatics/proto-schema-registry/internal/log"
 	"github.com/syncromatics/proto-schema-registry/internal/service"
@@ -30,7 +31,7 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	grp, ctx := errgroup.WithContext(ctx)
 
-	storage, err := storage.NewFileStorage(settings.KafkaBroker, settings.ReplicationFactor, "/tmp/schema-registry", "__proto_schemas")
+	storage, err := storage.NewFileStorage(settings.KafkaBroker, settings.ReplicationFactor, "/tmp/schema-registry", "__proto_schemas", time.Duration(settings.SecondsToWaitForKafka)*time.Second)
 	if err != nil {
 		log.Fatal(err)
 	}
