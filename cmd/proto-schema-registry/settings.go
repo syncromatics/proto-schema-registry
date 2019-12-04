@@ -8,8 +8,9 @@ import (
 )
 
 type settings struct {
-	KafkaBroker string
-	Port        int
+	KafkaBroker       string
+	Port              int
+	ReplicationFactor int16
 }
 
 func getSettingsFromEnv() (*settings, error) {
@@ -30,13 +31,23 @@ func getSettingsFromEnv() (*settings, error) {
 		allErrors = append(allErrors, fmt.Sprintf("failed to convert %s to int", port))
 	}
 
+	rfInt := 3
+	rf, ok := os.LookupEnv("REPLICATION_FACTOR")
+	if ok {
+		rfInt, err = strconv.Atoi(rf)
+		if err != nil {
+			allErrors = append(allErrors, fmt.Sprintf("failed to convert %s to int", rf))
+		}
+	}
+
 	if len(allErrors) > 0 {
 		return nil, fmt.Errorf("Missing required environment variables: %s", strings.Join(allErrors, ", "))
 	}
 
 	return &settings{
-		KafkaBroker: broker,
-		Port:        portInt,
+		KafkaBroker:       broker,
+		Port:              portInt,
+		ReplicationFactor: int16(rfInt),
 	}, nil
 }
 

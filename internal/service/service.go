@@ -62,6 +62,11 @@ func (s *Service) RegisterSchema(ctx context.Context, request *v1.RegisterSchema
 	}, nil
 }
 
+// Ping returns a response
+func (s *Service) Ping(ctx context.Context, r *v1.PingRequest) (*v1.PingResponse, error) {
+	return &v1.PingResponse{}, nil
+}
+
 // NewService creates a new schema service
 func NewService(storage Storage) *Service {
 	return &Service{
