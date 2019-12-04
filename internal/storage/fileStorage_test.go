@@ -8,6 +8,7 @@ import (
 	"io"
 	"path"
 	"testing"
+	"time"
 
 	"github.com/syncromatics/proto-schema-registry/internal/storage"
 
@@ -62,7 +63,7 @@ func Test_FileStorage_ShouldOnlyAcceptValidGzippedSchema(t *testing.T) {
 	tID := uuid.New()
 
 	p := path.Join("/tmp", tID.String())
-	file, err := storage.NewFileStorage(kafkaBroker, 1, p, fmt.Sprintf("_proto_test_schemas__%s", tID))
+	file, err := storage.NewFileStorage(kafkaBroker, 1, p, fmt.Sprintf("_proto_test_schemas__%s", tID), 10*time.Second)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -97,7 +98,7 @@ func Test_FileStorage_ShouldOnlyAcceptValidProtobuf(t *testing.T) {
 	tID := uuid.New()
 
 	p := path.Join("/tmp", tID.String())
-	file, err := storage.NewFileStorage(kafkaBroker, 1, p, fmt.Sprintf("_proto_test_schemas__%s", tID))
+	file, err := storage.NewFileStorage(kafkaBroker, 1, p, fmt.Sprintf("_proto_test_schemas__%s", tID), 10*time.Second)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -131,7 +132,7 @@ func Test_FileStorage_AddSchema(t *testing.T) {
 	tID := uuid.New()
 
 	p := path.Join("/tmp", tID.String())
-	file, err := storage.NewFileStorage(kafkaBroker, 1, p, fmt.Sprintf("_proto_test_schemas__%s", tID))
+	file, err := storage.NewFileStorage(kafkaBroker, 1, p, fmt.Sprintf("_proto_test_schemas__%s", tID), 10*time.Second)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -187,7 +188,7 @@ func Test_FileStorage_AddSchemaShouldReturnIdIfItAlreadyExists(t *testing.T) {
 	tID := uuid.New()
 
 	p := path.Join("/tmp", tID.String())
-	file, err := storage.NewFileStorage(kafkaBroker, 1, p, fmt.Sprintf("_proto_test_schemas__%s", tID))
+	file, err := storage.NewFileStorage(kafkaBroker, 1, p, fmt.Sprintf("_proto_test_schemas__%s", tID), 10*time.Second)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -227,7 +228,7 @@ func Test_FileStorage_AddSchemaShouldCheckForBreakingChanges(t *testing.T) {
 	tID := uuid.New()
 
 	p := path.Join("/tmp", tID.String())
-	file, err := storage.NewFileStorage(kafkaBroker, 1, p, fmt.Sprintf("_proto_test_schemas__%s", tID))
+	file, err := storage.NewFileStorage(kafkaBroker, 1, p, fmt.Sprintf("_proto_test_schemas__%s", tID), 10*time.Second)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -271,7 +272,7 @@ func Test_FileStorage_AddSchemaShouldAllowGoodChanges(t *testing.T) {
 	tID := uuid.New()
 
 	p := path.Join("/tmp", tID.String())
-	file, err := storage.NewFileStorage(kafkaBroker, 1, p, fmt.Sprintf("_proto_test_schemas__%s", tID))
+	file, err := storage.NewFileStorage(kafkaBroker, 1, p, fmt.Sprintf("_proto_test_schemas__%s", tID), 10*time.Second)
 	if err != nil {
 		t.Fatal(err)
 	}
