@@ -65,9 +65,13 @@ func newKafkaConsumer(broker string, replicas int16, storer SchemaStorer, topic 
 	}
 	defer admin.Close()
 
+	compact := "compact"
 	topicDetail := &sarama.TopicDetail{
 		NumPartitions:     1,
 		ReplicationFactor: replicas,
+		ConfigEntries: map[string]*string{
+			"cleanup.policy": &compact,
+		},
 	}
 	err = admin.CreateTopic(topic, topicDetail, false)
 	if err != nil && !strings.Contains(err.Error(), "already exists") {
