@@ -164,7 +164,7 @@ func extractDescriptor(m []byte) (*protobuf.FileDescriptorProto, error) {
 	}
 
 	desc := &protobuf.FileDescriptorProto{}
-	err = desc.XXX_Unmarshal(buf)
+	err = proto.Unmarshal(buf, desc)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to unmarshal proto")
 	}
