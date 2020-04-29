@@ -83,6 +83,45 @@ func Test_Comparer_WithFieldRemove(t *testing.T) {
 	}, problems)
 }
 
+func Test_Comparer_WithMultipleFieldsReserved(t *testing.T) {
+	current := `syntax = "proto3";
+	package gen;
+
+	message first {
+		string one = 1;
+		int64 two = 2;
+		int32 three = 3;
+	}
+
+	message record {
+		first first_message = 1;
+		first second_message = 2;
+		first third_message = 3;
+	}
+	`
+
+	new := `syntax = "proto3";
+	package gen;
+
+	message first {
+		reserved 1 to 2;
+		int32 three = 3;
+	}
+
+	message record {
+		reserved 1 to 2;
+		first third_message = 3;
+	}
+	`
+
+	ok, _, err := protobuf.CheckForBreakingChanges([]byte(current), []byte(new))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, true, ok)
+}
+
 func Test_Comparer_WithFieldReserved(t *testing.T) {
 	current := `syntax = "proto3";
 	package gen;
@@ -501,7 +540,7 @@ func Test_Comparer_WithMissingOneOf(t *testing.T) {
 
 	new := `syntax = "proto3";
 	package gen;
-	
+
 	message first {}
 
 	message record {
@@ -538,7 +577,7 @@ func Test_Comparer_WithOneOfMissingValue(t *testing.T) {
 
 	new := `syntax = "proto3";
 	package gen;
-	
+
 	message first {
 		oneof oneof_1 {
 			int32 oneof_1_int32 = 2;
@@ -579,7 +618,7 @@ func Test_Comparer_WithOneOfReservedValue(t *testing.T) {
 
 	new := `syntax = "proto3";
 	package gen;
-	
+
 	message first {
 		reserved 1;
 		oneof oneof_1 {
@@ -618,7 +657,7 @@ func Test_Comparer_WithOneOfChangedValue(t *testing.T) {
 
 	new := `syntax = "proto3";
 	package gen;
-	
+
 	message first {
 		oneof oneof_1 {
 			int64 oneof_1_string = 1;
