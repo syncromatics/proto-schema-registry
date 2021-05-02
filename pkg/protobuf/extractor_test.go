@@ -155,3 +155,26 @@ func Test_UnmarshalWithGen(t *testing.T) {
 
 	assert.Equal(t, new.String(), message.String())
 }
+
+func Test_SchemaExtractor_ShouldHandleRecursiveMessage(t *testing.T) {
+	o := &v1.AnyValue{}
+	s, err := protobuf.ExtractSchema(o)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	expected := `syntax = "proto3";
+package gen;
+message record {
+	oneof oneof_0 {
+		v1_ArrayValue array_value = 1;
+		string string_value = 2;
+	}
+}
+message v1_ArrayValue {
+	repeated v1_AnyValue values = 1;
+}
+`
+
+	assert.Equal(t, expected, s)
+}

@@ -1,5 +1,7 @@
 syntax = "proto3";
 package gen;
+option go_package = "github.com/syncromatics/proto-schema-registry/internal/test/testProto/gen";
+
 message google_protobuf_StringValue {
 	string value = 1;
 }

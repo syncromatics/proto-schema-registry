@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package v1;
+option go_package = "github.com/syncromatics/proto-schema-registry/internal/test/testProto/v1";
 
 enum Enum1 {
     ZERO = 0;
