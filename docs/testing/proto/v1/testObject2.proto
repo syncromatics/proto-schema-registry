@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package v1;
+option go_package = "github.com/syncromatics/proto-schema-registry/internal/test/testProto/v1";
 
 import "google/protobuf/wrappers.proto";
 import "v1/testObject.proto";

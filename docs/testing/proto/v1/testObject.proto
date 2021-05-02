@@ -3,6 +3,7 @@ syntax = "proto3";
 package v1;
 
 import "google/protobuf/wrappers.proto";
+option go_package = "github.com/syncromatics/proto-schema-registry/internal/test/testProto/v1";
 
 message TestObject {
     int64 id = 1;

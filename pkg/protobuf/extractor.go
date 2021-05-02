@@ -25,7 +25,7 @@ func ExtractSchema(message descriptor.Message) (string, error) {
 	}
 
 	types := &typesGroup{
-		messageTypes: map[string]*protobuf.DescriptorProto{},
+		messageTypes: map[string]*typeHolder{},
 		enumTypes:    map[string]enumType{},
 		seenPackages: map[string]struct{}{},
 	}
@@ -82,8 +82,13 @@ type enumType struct {
 	pkg        string
 }
 
+type typeHolder struct {
+	messageType *protobuf.DescriptorProto
+	visited     bool
+}
+
 type typesGroup struct {
-	messageTypes map[string]*protobuf.DescriptorProto
+	messageTypes map[string]*typeHolder
 	enumTypes    map[string]enumType
 	seenPackages map[string]struct{}
 }
@@ -109,11 +114,11 @@ func getTypes(pkg *protobuf.FileDescriptorProto, types *typesGroup) error {
 
 		name := fmt.Sprintf(".%s.%s", *pkg.Package, *m.Name)
 
-		types.messageTypes[name] = m
+		types.messageTypes[name] = &typeHolder{messageType: m}
 
 		for _, nt := range m.NestedType {
 			name := fmt.Sprintf(".%s.%s.%s", *pkg.Package, *m.Name, *nt.Name)
-			types.messageTypes[name] = nt
+			types.messageTypes[name] = &typeHolder{messageType: nt}
 		}
 
 		for _, enum := range m.EnumType {
@@ -201,7 +206,7 @@ func buildTree(tree *node, d *protobuf.DescriptorProto, types *typesGroup) error
 				}
 
 				leaf.Value = et.parentName
-				err := buildTree(leaf, parent, types)
+				err := buildTree(leaf, parent.messageType, types)
 				if err != nil {
 					return err
 				}
@@ -212,9 +217,14 @@ func buildTree(tree *node, d *protobuf.DescriptorProto, types *typesGroup) error
 			}
 		}
 
+		if ty.visited {
+			continue
+		}
+		ty.visited = true
+
 		tree.Leaves = append(tree.Leaves, leaf)
 
-		err := buildTree(leaf, ty, types)
+		err := buildTree(leaf, ty.messageType, types)
 		if err != nil {
 			return err
 		}
@@ -264,7 +274,7 @@ func writeTree(tree *node, job *writeTreeJob) error {
 
 	job.builder.WriteString(fmt.Sprintf("message %s {\n", name))
 	inOnOf := false
-	for _, v := range t.Field {
+	for _, v := range t.messageType.Field {
 
 		if v.OneofIndex != nil && !inOnOf {
 			job.builder.WriteString(fmt.Sprintf("	oneof oneof_%d {\n", *v.OneofIndex))
@@ -371,7 +381,7 @@ func writeTree(tree *node, job *writeTreeJob) error {
 		job.builder.WriteString("	}\n")
 	}
 
-	for _, e := range t.EnumType {
+	for _, e := range t.messageType.EnumType {
 		job.builder.WriteString(fmt.Sprintf("	enum %s {\n", *e.Name))
 		for _, o := range e.Value {
 			job.builder.WriteString(fmt.Sprintf("		%s = %d;\n", *o.Name, *o.Number))

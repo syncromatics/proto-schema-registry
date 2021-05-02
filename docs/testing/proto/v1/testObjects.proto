@@ -1,13 +1,13 @@
 syntax = "proto3";
 
 package v1;
+option go_package = "github.com/syncromatics/proto-schema-registry/internal/test/testProto/v1";
 
 import "v1/testObject.proto";
 import "v1/testObject2.proto";
 import "v1/testObject3.proto";
 import "v1/enums.proto";
 
-option go_package = "v1";
 
 message TestObjects {
     TestObject object = 1;

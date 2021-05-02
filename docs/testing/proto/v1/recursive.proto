@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package v1;
+option go_package = "github.com/syncromatics/proto-schema-registry/internal/test/testProto/v1";
+
+message AnyValue {
+    oneof value {
+        ArrayValue array_value = 1;
+        string string_value = 2;
+    }
+}
+
+message ArrayValue {
+    repeated AnyValue values = 1;
+}
